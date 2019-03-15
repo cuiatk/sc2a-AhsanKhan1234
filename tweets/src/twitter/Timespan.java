@@ -29,6 +29,7 @@ public class Timespan {
         if (start.isAfter(end)) {
             throw new IllegalArgumentException("requires start <= end");
         }
+        
         this.start = start;
         this.end = end;
     }

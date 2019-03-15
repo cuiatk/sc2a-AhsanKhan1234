@@ -38,6 +38,7 @@ public class Main {
      * 
      * @param args command-line arguments (not used)
      */
+    
     public static void main(String[] args) {
         try {
             assert false;

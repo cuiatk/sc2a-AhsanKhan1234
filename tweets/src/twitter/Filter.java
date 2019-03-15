@@ -3,6 +3,9 @@
  */
 package twitter;
 
+import static org.junit.Assert.assertFalse;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +30,28 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> writtenBy(List<Tweet> tweets, String username) {
-        throw new RuntimeException("not implemented");
+    	
+    	List<Tweet> tweetWrittenBy =  new ArrayList<>();
+    	if(tweets.isEmpty()) {
+    		System.out.println("empty list");
+    		return tweetWrittenBy;
+    	}
+    	else
+    	{
+    		
+    		
+    		for (int i=0;i<tweets.size();i++)
+    		{
+    			Tweet tweet = tweets.get(i);
+    			if (tweet.getAuthor().contains(username)) {
+    				tweetWrittenBy.add(tweet);
+    			}
+    		}
+    		return tweetWrittenBy;
+    	}
+    	
+    	
+    	
     }
 
     /**

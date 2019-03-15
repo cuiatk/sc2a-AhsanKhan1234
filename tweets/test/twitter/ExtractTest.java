@@ -5,8 +5,11 @@ package twitter;
 
 import static org.junit.Assert.*;
 
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -19,16 +22,26 @@ public class ExtractTest {
      * Make sure you have partitions.
      */
     
-    private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
-    private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
-    
-    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
-    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
-    
+	    private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
+	    private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
+	    private static final Instant d3 = Instant.parse("2016-02-17T11:10:00Z");
+	    private static final Instant d4 = Instant.parse("2016-02-17T11:15:00Z");
+	    private static final Instant d5 = Instant.parse("2016-02-17T11:30:00Z");
+	    private static final Instant d6 = Instant.parse("2016-02-17T10:30:00Z");
+	    
+	    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+	    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+	    private static final Tweet tweet3 = new Tweet(3, "Ahsan Khan", "whats going on dude??", d3);
+	    private static final Tweet tweet4 = new Tweet(4, "Ahsan's Tweet", "@Ahsan is doing tweet 4",d4);
+	    private static final Tweet tweet5 = new Tweet(5, "usman and shazaib tweet", "@usman @shazaib are doing tweet 5",d5);
+	    private static final Tweet tweet6 = new Tweet(6, "hamad tweet", "@hamad @hamad doing tweet 6",d6);
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
     }
+    /**this test case test the method if we pass two tweets in the list
+   
+      */
     
     @Test
     public void testGetTimespanTwoTweets() {
@@ -37,6 +50,40 @@ public class ExtractTest {
         assertEquals("expected start", d1, timespan.getStart());
         assertEquals("expected end", d2, timespan.getEnd());
     }
+    /**this test case test the method if we pass three tweets in the list
+    
+     */
+    @Test
+    public void testGetTimespanThreeTweets() {
+        Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1, tweet2, tweet3));
+        
+        assertEquals(d1, timespan.getStart());
+        assertEquals(d3, timespan.getEnd());
+    }
+    
+    /**this test case test the method if we pass one tweets in the list
+    
+     */
+    
+    @Test
+    public void testGetTimespanOneTweet() {
+        Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1));
+        assertEquals("start",d1, timespan.getStart());
+        assertEquals("end",d1, timespan.getEnd());        
+    }
+    /**this test case test the method if we pass no tweets in the list
+    
+     */
+   @Test
+    public void testGetTimespanNoTweet() {
+    	ArrayList list = new ArrayList<Tweet>();
+    	
+        Timespan timespan = Extract.getTimespan(list);
+        assertEquals(timespan.getStart(),timespan.getEnd());         
+    }
+ /**this test case test the method if there is no one mentioned in tweet
+    
+     */
     
     @Test
     public void testGetMentionedUsersNoMention() {
@@ -44,6 +91,50 @@ public class ExtractTest {
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
     }
+    
+ /**this test case test the method if there is one mentioned in only one tweet
+  * like for example  "@Ahsan is this another one of these stupid tests?" 
+  * here only one username is mentioned "Ahsan"
+    
+     */
+    @Test
+    public void testGetMentionedUsersOneMentionOneTweet() {         
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet4));
+        Set<String> mentionedUsersLowerCase = new HashSet<>();
+        for (String mentionedUser : mentionedUsers) {
+            mentionedUsersLowerCase.add(mentionedUser.toLowerCase());
+        }
+        assertTrue(mentionedUsersLowerCase.contains("ahsan"));
+    }
+    /**this test case test the method if there are two mentioned in only one tweet
+     * like for example  "@usman @shazaib can't believe I'm doing another"
+     * here two usernames are mentioned "usman","shazaib"
+       
+        */
+    @Test
+    public void testGetMentionedUsersTwoeMentionOneTweet() {         
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet5));
+        Set<String> mentionedUsersLowerCase = new HashSet<>();
+        for (String mentionedUser : mentionedUsers) {
+            mentionedUsersLowerCase.add(mentionedUser.toLowerCase());
+        }
+        assertTrue(mentionedUsersLowerCase.containsAll(Arrays.asList("usman", "shazaib")));
+    }
+    /**this test case test the method if there are two mentioned in only one tweet but they are repeated
+     * like for example  "@hamad @hamad can't believe I'm doing another"
+     * here two usernames are mentioned "hamad","hamad" but two times
+       
+        */
+    @Test
+    public void testGetMentionedUsersTwoeMentionOneTweetrepeateduser() {         
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet6));
+        Set<String> mentionedUsersLowerCase = new HashSet<>();
+        for (String mentionedUser : mentionedUsers) {
+            mentionedUsersLowerCase.add(mentionedUser.toLowerCase());
+        }
+        assertTrue(mentionedUsersLowerCase.contains("hamad"));
+    }
+
 
     /*
      * Warning: all the tests you write here must be runnable against any

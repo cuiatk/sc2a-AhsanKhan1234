@@ -3,8 +3,14 @@
  */
 package twitter;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.hamcrest.Matcher;
 
 /**
  * Extract consists of methods that extract information from a list of tweets.
@@ -24,7 +30,18 @@ public class Extract {
      *         every tweet in the list.
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+    	
+    	Timespan t = new Timespan(Instant.now(),Instant.now());
+    	if(tweets.isEmpty())
+    	{
+    		System.out.println("empty list");
+    		return t;
+    	}
+    	 Instant start = tweets.get(0).getTimestamp();
+         Instant end = tweets.get(tweets.size()-1).getTimestamp();
+         t= new Timespan(start,end);
+         return t;
+        
     }
 
     /**
@@ -43,7 +60,27 @@ public class Extract {
      *         include a username at most once.
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Pattern myPattern = Pattern.compile("@(\\w+|\\W+)");
+        Set<String> mentionedusersInTweet = new HashSet<String>();
+        for (Tweet tweet : tweets) {
+            String tweetText = tweet.getText();
+            java.util.regex.Matcher matcher = myPattern.matcher(tweetText.toLowerCase());
+            List<String> mentionedusersLowerCase = new ArrayList<String>();
+            //System.out.println("Mentioned names are:");
+            while(matcher.find()){
+                System.out.println(matcher.group(1));
+                
+                mentionedusersLowerCase.add(matcher.group(1)); //it will add all the names to list array list in lowercase
+                }
+            mentionedusersInTweet.addAll(mentionedusersLowerCase); //it will add all the name to mentionedUserinList Set
+            }
+        return mentionedusersInTweet; 
+    	 //i got idea of pattern and matcher classes from stackoverflow and github
+    	
+    	
+         
+         
+    	
     }
 
 }
