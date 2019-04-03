@@ -6,6 +6,7 @@ package twitter;
 import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,7 +34,6 @@ public class Filter {
     	
     	List<Tweet> tweetWrittenBy =  new ArrayList<>();
     	if(tweets.isEmpty()) {
-    		System.out.println("empty list");
     		return tweetWrittenBy;
     	}
     	else
@@ -43,7 +43,7 @@ public class Filter {
     		for (int i=0;i<tweets.size();i++)
     		{
     			Tweet tweet = tweets.get(i);
-    			if (tweet.getAuthor().contains(username)) {
+    			if (tweet.getAuthor().toLowerCase().contains(username.toLowerCase())) {
     				tweetWrittenBy.add(tweet);
     			}
     		}
@@ -65,7 +65,24 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
-        throw new RuntimeException("not implemented");
+    	 List<Tweet> tweetsintimeSpan = new ArrayList<>();
+    	 if(tweets.isEmpty())
+    	 {
+    		 return tweetsintimeSpan;
+    	 }
+    	 else
+    	 {
+    		 for (Tweet tweet : tweets) {
+             
+              if (tweet.getTimestamp().isBefore(timespan.getEnd()) && tweet.getTimestamp().isAfter(timespan.getStart())) {
+                   tweetsintimeSpan.add(tweet);
+                 }
+             }
+    		 return tweetsintimeSpan;
+
+    	 }
+        
+         
     }
 
     /**
@@ -84,7 +101,50 @@ public class Filter {
      *         same order as in the input list.
      */
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
-        throw new RuntimeException("not implemented");
+    	List<String> loweredList = new ArrayList<>();
+        for (String lowered : words) {
+            loweredList.add(lowered.toLowerCase());
+        }
+
+        List<Tweet> tweetsWithKeyWords = new ArrayList<>();
+        for (Tweet tweet : tweets) {
+         
+        	  for (int j=0;j<loweredList.size();j++) {
+        		  if (tweet.getText().toLowerCase().contains(loweredList.get(j))) {
+        			  tweetsWithKeyWords.add(tweet);
+                      break;
+            	  }
+        	  }
+          
+        	 
+        }
+        
+        return tweetsWithKeyWords;
     }
+        	
+        	
+        	
+         
+    	
+    	/*
+    	List<String> loweredList = new ArrayList<>();
+        for (String lowered : words) {
+            loweredList.add(lowered.toLowerCase());
+        }
+
+        List<Tweet> tweetsWithKeyWords = new ArrayList<>();
+        for (Tweet tweet : tweets) {
+          
+            List<String> wordsfromtweet = new ArrayList<String>(Arrays.asList(tweet.getText().split(" ")));
+            for (String st : wordsfromtweet) {
+                if (loweredList.contains(st.toLowerCase())) {
+                    tweetsWithKeyWords.add(tweet);
+                    break;
+                }
+
+            }
+        }
+        return tweetsWithKeyWords; */
+    
 
 }

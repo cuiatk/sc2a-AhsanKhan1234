@@ -5,7 +5,7 @@ package twitter;
 
 import static org.junit.Assert.*;
 
-
+import java.awt.List;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,9 +29,9 @@ public class ExtractTest {
 	    private static final Instant d5 = Instant.parse("2016-02-17T11:30:00Z");
 	    private static final Instant d6 = Instant.parse("2016-02-17T10:30:00Z");
 	    
-	    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
+	    private static final Tweet tweet1 = new Tweet(1, "alyssa", "@hamad is it reasonable to talk about rivest so much?", d1);
 	    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
-	    private static final Tweet tweet3 = new Tweet(3, "Ahsan Khan", "whats going on dude??", d3);
+	    private static final Tweet tweet3 = new Tweet(3, "Ahsan Khan", "@hamad whats going on dude??", d3);
 	    private static final Tweet tweet4 = new Tweet(4, "Ahsan's Tweet", "@Ahsan is doing tweet 4",d4);
 	    private static final Tweet tweet5 = new Tweet(5, "usman and shazaib tweet", "@usman @shazaib are doing tweet 5",d5);
 	    private static final Tweet tweet6 = new Tweet(6, "hamad tweet", "@hamad @hamad doing tweet 6",d6);
@@ -87,7 +87,7 @@ public class ExtractTest {
     
     @Test
     public void testGetMentionedUsersNoMention() {
-        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1));
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet2));
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
     }
@@ -134,7 +134,24 @@ public class ExtractTest {
         }
         assertTrue(mentionedUsersLowerCase.contains("hamad"));
     }
-
+    @Test
+    public void testGetMentionedUsersMoreeMentionMoreThanOneTweetrepeateduser() {    
+    	int count=0;
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet6,tweet1,tweet3));
+        Set<String> mentionedUsersLowerCase = new HashSet<>();
+        for (int i=0;i<mentionedUsers.size();i++)
+        {
+        	count++;
+        }
+        assertEquals(1,count);
+        for (String mentionedUser : mentionedUsers) {
+            mentionedUsersLowerCase.add(mentionedUser.toLowerCase());
+        }
+        assertTrue(mentionedUsersLowerCase.contains("hamad"));
+    }
+   
+   
+   
 
     /*
      * Warning: all the tests you write here must be runnable against any

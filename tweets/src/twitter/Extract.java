@@ -75,8 +75,12 @@ public class Extract {
             mentionedusersInTweet.addAll(mentionedusersLowerCase); //it will add all the name to mentionedUserinList Set
             }
         return mentionedusersInTweet; 
-    	 //i got idea of pattern and matcher classes from stackoverflow and github
     	
+    	
+    	
+         
+         
+
     	
          
          
